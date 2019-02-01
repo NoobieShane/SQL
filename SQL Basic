@@ -27,3 +27,22 @@ or CITY like 'u%') AND
 (CITY like '%a' or CITY like '%e'
 or CITY like '%i' or CITY like '%o'
 or CITY like '%u')
+
+#Query the list of CITY names from STATION that do not start with vowels. Your result cannot contain duplicates.
+SELECT DISTINCT CITY FROM STATION  
+WHERE CITY REGEXP '^[^aeiou]' #[^aeious] = [all letter except aeiou]
+
+#Regular Expression 
+SELECT NAME FROM ITEM 
+WHERE name REGEXP 'new' #everyrow in name column contains "new" such as brandnew newphone or new
+           REGEXP '.box' #dot box means allow a space before word "box"
+           REGEXP "gold|car" pipe = or seach for word either contain gold or car 
+           REGEXP '[^12345] boxes of frogs' search for 1 or 2 or 3 or 4 or 5 boxes of frog; using [1-5] boxes of frogs would be same
+           REGEXP '[^12345] boxes of frogs' ^means except 
+           
+       
+           
+           
+           
+           
+           
