@@ -1,0 +1,6 @@
+#Select distinct city from station where its id is even number 
+
+SELECT DISTINCT CITY 
+FROM STATION
+WHERE ID%2 = 0
+
