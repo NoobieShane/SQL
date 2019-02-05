@@ -40,9 +40,116 @@ WHERE name REGEXP 'new' #everyrow in name column contains "new" such as brandnew
            REGEXP '[^12345] boxes of frogs' search for 1 or 2 or 3 or 4 or 5 boxes of frog; using [1-5] boxes of frogs would be same
            REGEXP '[^12345] boxes of frogs' ^means except 
            
-       
+# REGEXP 
+# Query the list of CITY names from STATION that do not end with vowels. Your result cannot contain duplicates.
+
+SELECT DISTINCT CITY FROM STATION 
+WHERE NOT CITY REGEXP '[aeiou]$' # or WHERE CITY REGEXP '[^aeiou]$'
+
+# Query the list of CITY names from STATION that either do not start with vowels or do not end with vowels. Your result cannot contain duplicates
+SELECT DISTINCT CITY FROM STATION 
+WHERE CITY REGEXP '^[^aeiou]' 
+or CITY REGEXP '[^aeiou]$'
+
+# Qurey name from students, order by the last three character of each name 
+SELECT NAME FROM STUDENTS 
+WHERE MARKs > 75
+ORDER BY substr(name, -3,3 ), ID ASC        #-3 position to start, 3 length
+
+#Aggregation 
+#Query the sum of the populations for all Japanese cities in CITY. The COUNTRYCODE for Japan is JPN.
+SELECT SUM(POPULATION) FROM CITY 
+WHERE COUNTRYCODE = 'JPN'
            
-           
-           
-           
-           
+# Query the difference between the maximum and minimum populations in CITY
+SELECT MAX(POPULATION) - MIN(POPULATION) AS DIFFERENCE
+FROM CITY 
+
+# Query a count of the number of cities in CITY having a Population larger than 100000.
+SELECT COUNT(NAME) FROM CITY 
+WHERE POPULATION > 100000
+
+# Query the total population of all cities in CITY where District is California
+SELECT SUM(POPULATION)
+FROM CITY 
+WHERE DISTRICT = 'California'
+
+#Query the average population of all cities in CITY where District is California.
+SELECT AVG(POPULATION)
+FROM CITY
+WHERE DISTRICT = 'California'
+
+#Query the average population for all cities in CITY, rounded down to the nearest integer.
+SELECT ROUND(AVG(POPULATION),0)
+FROM CITY
+
+# The accountant didnt noticed the key 'o' was not funcitioning, query calculating the different between the actual average salary and miscalculated salary
+SELECT CEIL((AVG(Salary)-AVG(Replace(Salary,'0','')))) FROM 
+EMPLOYEES
+
+# Query the top earners and how many of them
+SELECT MONTHS*SALARY as total, COUNT(employee_id)
+FROM EMPLOYEE
+WHERE MONTHS*SALARY = (SELECT MAX(MONTHS*SALARY) FROM EMPLOYEE)
+GROUP BY total
+
+# Query the following two values from the STATION table:
+
+The sum of all values in LAT_N rounded to a scale of  decimal places.
+The sum of all values in LONG_W rounded to a scale of  decimal places.
+
+SELECT ROUND(SUM(lat_n),2), ROUND(sum(long_w),2)
+FROM STATION
+
+# Query the sum of Northern Latitudes (LAT_N) from STATION having values greater than  and less than . Truncate your answer to  decimal places.
+SELECT ROUND(SUM(LAT_N),4)
+FROM STATION
+WHERE LAT_N > 38.7880 AND LAT_N < 137.2345
+
+# Query the Western Longitude (LONG_W) for the largest Northern Latitude (LAT_N) in STATION that is less than . Round your answer to  decimal places.
+SELECT ROUND(LONG_W,4)
+FROM STATION
+WHERE LAT_N = (SELECT MAX(LAT_N) FROM STATION 
+              WHERE LAT_N < 137.2345) 
+              
+# Query the smallest Northern Latitude (LAT_N) from STATION that is greater than . Round your answer to  decimal places.
+SELECT ROUND(MIN(LAT_N),4)
+FROM STATION 
+WHERE LAT_N > 38.7780
+
+#Calculate Manhattan Distance between two points in term of longitude and latitude
+SELECT ROUND((ABS(MAX(LAT_N)-MIN(LAT_N))+ABS(MAX(LONG_W)-MIN(LONG_W))),4)
+                                             FROM STATION
+                                             
+select round(sqrt(power(min(lat_n)-max(lat_n),2)+power(min(long_w)-max(long_w),2)),4) 
+from station;
+
+# A median is defined as a number separating the higher half of a data set from the lower half. Query the median of the Northern Latitudes (LAT_N) from STATION and round your answer to  decimal places.
+SELECT ROUND(AVG(dd.LAT_N),4) as median_val
+FROM (
+SELECT d.LAT_N, @rownum:=@rownum+1 as `row_number`  @rownum:=@rownum+1 is a loop to create row number for each row 
+  FROM STATION d, (SELECT @rownum:=0) r
+  WHERE d.LAT_N is NOT NULL
+  ORDER BY d.LAT_N
+) as dd
+WHERE dd.row_number IN ( FLOOR((@rownum+1)/2), FLOOR((@rownum+2)/2) ); Return the largest integer value that is equal to or less than the value 
+
+#Given the CITY and COUNTRY tables, query the names of all the continents (COUNTRY.Continent) and their respective average city populations (CITY.Population) rounded down to the nearest integer.
+SELECT  COUNTRY.CONTINENT,FLOOR(AVG(CITY.POPULATION))
+FROM CITY, COUNTRY 
+WHERE CITY.COUNTRYCODE = COUNTRY.CODE
+GROUP BY COUNTRY.CONTINENT 
+
+#Given the CITY and COUNTRY tables, query the sum of the populations of all cities where the CONTINENT is 'Asia'.
+
+Note: CITY.CountryCode and COUNTRY.Code are matching key columns.
+    SELECT SUM(CITY.POPULATION)
+    FROM CITY, COUNTRY
+    WHERE CITY.COUNTRYCODE = COUNTRY.CODE
+    GROUP BY COUNTRY.CONTINENT
+    HAVING COUNTRY.CONTINENT = 'Asia'
+    
+
+
+
+
