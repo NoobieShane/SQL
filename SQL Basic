@@ -149,7 +149,46 @@ Note: CITY.CountryCode and COUNTRY.Code are matching key columns.
     GROUP BY COUNTRY.CONTINENT
     HAVING COUNTRY.CONTINENT = 'Asia'
     
+# Make a report for studetns' grade. only show students name with grade > 8
 
+SELECT IF(Grade<8,NULL,Name), Grade, Marks 
+FROM Students S, Grades G 
+WHERE S.MARKS >= G.MIN_MARK AND S.MARKS <= G.MAX_MARK
+ORDER BY G.GRADE DESC, S.NAME;
+
+#Write a query to print the respective hacker_id and name 
+of hackers who achieved full scores for more than one challenge. 
+Order your output in descending order by the total number of challenges 
+in which the hacker earned a full score. If more than one hacker received 
+full scores in same number of challenges, then sort them by ascending hacker_id
+
+SELECT H.hacker_id, H.name
+FROM HACKERS H 
+INNER JOIN Submissions S
+ON H.hacker_id = S.hacker_id
+INNER JOIN Challenges C
+ON S.challenge_id = C.challenge_id
+INNER JOIN Difficulty D
+ON C.difficulty_level = D.difficulty_level
+WHERE S.SCORE = D.SCORE 
+GROUP BY H.hacker_id, H.name 
+having count(*) > 1
+ORDER BY COUNT(*) DESC,H.Hacker_id ASC
+
+# Help a ron to pick up a wand(pick the wand in the same conidtion(age, power, not_evel) but cost the least
+SELECT w3.id,a.age, a.gold, a.power from
+(SELECT W2.age, min(w1.coins_needed) as gold, w1.power,w2.code
+FROM Wands W1
+INNER JOIN Wands_Property W2
+ON W1.CODE = W2.CODE
+WHERE W2.is_evil = 0
+GROUP BY W2.age,w1.power,w2.code
+) a
+inner join Wands w3
+on w3.coins_needed = a.gold 
+and w3.power = a.power
+AND w3.code = a.code
+ORDER BY a.power DESC, a.age DESC;
 
 
 
