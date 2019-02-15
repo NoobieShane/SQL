@@ -190,5 +190,12 @@ and w3.power = a.power
 AND w3.code = a.code
 ORDER BY a.power DESC, a.age DESC;
 
-
+#Concat, lower()
+SELECT CONCAT(c.Name,'(',substring(c.Occupation, 1,1),')') as name
+FROM OCCUPATIONS c
+ORDER BY c.name;
+SELECT CONCAT('There are a total of ',COUNT(c.OCCUPATION),' ',lower(c.OCCUPATION),'s.')
+FROM Occupations c
+GROUP BY c.OCCUPATION
+ORDER BY COUNT(c.OCCUPATION) ASC;
 
